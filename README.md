@@ -1,2 +1,10 @@
-# facebook-events-auto-inviter
-Chrome plugin to automatically invite a lot of followers to your events
+# Facebook Events Auto Inviter
+
+## Installation
+
+You'll have to follow these steps to proceed to use the plugin in Chrome :
+
+- Go to **chrome://extensions/** in your Chrome browser.
+- On the top left corner click the button "**Load unpackaged extension**".
+- Select the folder containing the manifest.json and other files.
+- Enjoy it !

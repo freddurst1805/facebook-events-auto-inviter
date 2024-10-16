@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Facebook Events Auto Inviter",
+  "version": "1.0",
+  "description": "Automatically invite all followers/friends for your events on Facebook.",
+  "permissions": ["activeTab", "scripting"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.facebook.com/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
