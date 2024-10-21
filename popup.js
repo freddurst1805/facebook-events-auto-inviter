@@ -25,15 +25,57 @@ function startApp() {
 
     // Coche tous les contacts
     intervalToggleFB = setInterval(() =>{
-        const inviteButtons = document.querySelectorAll('div[aria-label="Invitez des personnes"] .x1emribx.x1i64zmx i.x1b0d499.x1d69dk1');
-        inviteButtons.forEach(button => {
-            button.click();
-        });
+        let inviteButtons = false;
+        let invitationsRestantesEl = false;
+        let invitationsRestantes = 0;
+        if(document.querySelectorAll('div[aria-label="Invitez des personnes"]').length > 0) {
+            inviteButtons = document.querySelectorAll('div[aria-label="Invitez des personnes"] .x1n2onr6 > div:not([aria-disabled="true"]) .x1emribx.x1i64zmx i.x1b0d499.x1d69dk1');
+            invitationsRestantesEl = document.querySelector('div[aria-label="Invitez des personnes"] .x193iq5w.xeuugli.x13faqbe.x1vvkbs.x1xmvt09.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.x4zkp8e.x676frb.x1pg5gke.x1sibtaa.x1s688f.xi81zsa');
+        }
+        else if(document.querySelectorAll('div[aria-label="Invitez des followers"]').length > 0) {
+            inviteButtons = document.querySelectorAll('div[aria-label="Invitez des followers"] .x1n2onr6 > div:not([aria-disabled="true"]) .x1emribx.x1i64zmx i.x1b0d499.x1d69dk1');
+            invitationsRestantesEl = document.querySelector('div[aria-label="Invitez des followers"] .x193iq5w.xeuugli.x13faqbe.x1vvkbs.x1xmvt09.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.x4zkp8e.x676frb.x1pg5gke.x1sibtaa.x1s688f.xi81zsa');
+        }
+        if(inviteButtons) {
+            // Récupère le nombre d'invitations restantes max
+            if(invitationsRestantesEl) {
+                const invitationsRestantesTexte = invitationsRestantesEl.textContent;
+                const chiffres = invitationsRestantesTexte.match(/\d+/)[0];
+                invitationsRestantes = parseInt(chiffres[0], 10);
+
+                let i = 0;
+                inviteButtons.forEach(button => {
+                    if(i < invitationsRestantes) {
+                        button.click();
+                        i++;
+                    }
+                    else
+                        return false;
+                });
+            }
+            else {
+                inviteButtons.forEach(button => {
+                    button.click();
+                });
+            }
+        }
+
+        // Si on arrive au bout des contact, on stop le défilement
+        if((document.querySelectorAll('div[aria-label="Invitez des personnes"] .x1n2onr6 > div[aria-disabled="true"] .x1emribx.x1i64zmx i.x1b0d499.x1d69dk1').length > 0
+            || document.querySelectorAll('div[aria-label="Invitez des followers"] .x1n2onr6 > div[aria-disabled="true"] .x1emribx.x1i64zmx i.x1b0d499.x1d69dk1').length > 0)
+            && (invitationsRestantes == 'undefined' || invitationsRestantes === 0)) {
+                clearInterval(intervalScrollingFB);
+                clearInterval(intervalToggleFB);
+        }
     }, 200);
 
     // Scroll le block des contacts vers le bas
     intervalScrollingFB = setInterval(() => {
-        const scrollableBlock = document.querySelector('div[aria-label="Invitez des personnes"] div.x2atdfe.xb57i2i.x1q594ok.x5lxg6s.x78zum5.xdt5ytf.x1n2onr6.x1ja2u2z.xw2csxc.x7p5m3t.x1odjw0f.x1e4zzel');
+        let scrollableBlock = false;
+        if(document.querySelectorAll('div[aria-label="Invitez des personnes"]').length > 0)
+            scrollableBlock = document.querySelector('div[aria-label="Invitez des personnes"] div.x2atdfe.xb57i2i.x1q594ok.x5lxg6s.x78zum5.xdt5ytf.x1n2onr6.x1ja2u2z.xw2csxc.x7p5m3t.x1odjw0f.x1e4zzel');
+        else if(document.querySelectorAll('div[aria-label="Invitez des followers"]').length > 0)
+            scrollableBlock = document.querySelector('div[aria-label="Invitez des followers"] div.x2atdfe.xb57i2i.x1q594ok.x5lxg6s.x78zum5.xdt5ytf.x1n2onr6.x1ja2u2z.xw2csxc.x7p5m3t.x1odjw0f.x1e4zzel');
 
         if(scrollableBlock) {
             scrollableBlock.scrollTop = scrollableBlock.scrollHeight;
