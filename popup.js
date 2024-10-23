@@ -29,11 +29,11 @@ function startApp() {
         let invitationsRestantesEl = false;
         let invitationsRestantes = 0;
         if(document.querySelectorAll('div[aria-label="Invitez des personnes"]').length > 0) {
-            inviteButtons = document.querySelectorAll('div[aria-label="Invitez des personnes"] .x1n2onr6 > div:not([aria-disabled="true"]) .x1emribx.x1i64zmx i.x1b0d499.x1d69dk1');
+            inviteButtons = document.querySelectorAll('div[aria-label="Invitez des personnes"] .x1emribx.x1i64zmx i.x1b0d499.x1d69dk1');
             invitationsRestantesEl = document.querySelector('div[aria-label="Invitez des personnes"] .x193iq5w.xeuugli.x13faqbe.x1vvkbs.x1xmvt09.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.x4zkp8e.x676frb.x1pg5gke.x1sibtaa.x1s688f.xi81zsa');
         }
         else if(document.querySelectorAll('div[aria-label="Invitez des followers"]').length > 0) {
-            inviteButtons = document.querySelectorAll('div[aria-label="Invitez des followers"] .x1n2onr6 > div:not([aria-disabled="true"]) .x1emribx.x1i64zmx i.x1b0d499.x1d69dk1');
+            inviteButtons = document.querySelectorAll('div[aria-label="Invitez des followers"] .x1emribx.x1i64zmx i.x1b0d499.x1d69dk1');
             invitationsRestantesEl = document.querySelector('div[aria-label="Invitez des followers"] .x193iq5w.xeuugli.x13faqbe.x1vvkbs.x1xmvt09.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.x4zkp8e.x676frb.x1pg5gke.x1sibtaa.x1s688f.xi81zsa');
         }
         if(inviteButtons) {
@@ -41,16 +41,22 @@ function startApp() {
             if(invitationsRestantesEl) {
                 const invitationsRestantesTexte = invitationsRestantesEl.textContent;
                 const chiffres = invitationsRestantesTexte.match(/\d+/)[0];
-                invitationsRestantes = parseInt(chiffres[0], 10);
+                invitationsRestantes = parseInt(chiffres, 10);
 
                 let i = 0;
                 inviteButtons.forEach(button => {
-                    if(i < invitationsRestantes) {
-                        button.click();
-                        i++;
+                    let state = button.closest('a[aria-disabled]');
+                    if(!state || state.getAttribute('aria-disabled') !== 'true') {
+                        console.log(i, invitationsRestantes);
+                        if(i < invitationsRestantes) {
+                            button.click();
+                            i++;
+                        }
+                        else {
+                            clearInterval(intervalScrollingFB);
+                            clearInterval(intervalToggleFB);
+                        }
                     }
-                    else
-                        return false;
                 });
             }
             else {
@@ -58,14 +64,6 @@ function startApp() {
                     button.click();
                 });
             }
-        }
-
-        // Si on arrive au bout des contact, on stop le défilement
-        if((document.querySelectorAll('div[aria-label="Invitez des personnes"] .x1n2onr6 > div[aria-disabled="true"] .x1emribx.x1i64zmx i.x1b0d499.x1d69dk1').length > 0
-            || document.querySelectorAll('div[aria-label="Invitez des followers"] .x1n2onr6 > div[aria-disabled="true"] .x1emribx.x1i64zmx i.x1b0d499.x1d69dk1').length > 0)
-            && (invitationsRestantes == 'undefined' || invitationsRestantes === 0)) {
-                clearInterval(intervalScrollingFB);
-                clearInterval(intervalToggleFB);
         }
     }, 200);
 
